@@ -1,0 +1,41 @@
+[
+  {
+    "id": "time_machine",
+    "title": "다비치 - 타임머신🚀",
+    "videoUrl": "/videos/time.webm",
+    "thumbnailUrl": "/images/thumb_time_machine.jpg",
+    "tracks": [
+      { "id": "vocal1", "label": "보컬1", "url": "/audio/time_machine/vocal1.weba" },
+      { "id": "vocal2", "label": "보컬2", "url": "/audio/time_machine/vocal2.weba" },
+      { "id": "inst", "label": "반주", "url": "/audio/time_machine/other.weba" },
+      { "id": "piano", "label": "피아노", "url": "/audio/time_machine/piano.weba" }
+    ]
+  },
+  {
+    "id": "chap",
+    "title": "더 시즌즈 (10cm의 쓰담쓰담) - 찹쌀떡",
+    "videoUrl": "/videos/chap.webm",
+    "thumbnailUrl": "/images/thumb_challenge_02.jpg",
+    "tracks": [
+      { "id": "vocal1", "label": "메인보컬", "url": "/audio/chap/main.weba" },
+      { "id": "vocal2", "label": "코러스", "url": "/audio/chap/sub.weba" },
+      { "id": "piano", "label": "피아노", "url": "/audio/chap/2_piano.weba" },
+      { "id": "guitar", "label": "기타", "url": "/audio/chap/2_guitar.weba" },
+      { "id": "bass", "label": "베이스", "url": "/audio/chap/2_bass.weba" },
+      { "id": "drum", "label": "드럼", "url": "/audio/chap/2_drums.weba" }
+    ]
+  },
+  {
+    "id": "golden",
+    "title": "더 시즌즈 (10cm의 쓰담쓰담) - GOLDEN",
+    "videoUrl": "/videos/golden.webm",
+    "thumbnailUrl": "/images/thumb_challenge_02.jpg",
+    "tracks": [
+      { "id": "vocal1", "label": "메인보컬", "url": "/audio/golden/vocal.weba" },
+      { "id": "piano", "label": "피아노", "url": "/audio/golden/piano.weba" },
+      { "id": "guitar", "label": "기타", "url": "/audio/golden/guitar.weba" },
+      { "id": "bass", "label": "베이스", "url": "/audio/golden/bass.weba" },
+      { "id": "drum", "label": "드럼", "url": "/audio/golden/drum.weba" }
+    ]
+  }
+]
