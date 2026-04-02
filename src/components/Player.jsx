@@ -8,12 +8,16 @@ export const Player = forwardRef(function Player(
     className = "",
     sessionStarted = false,
     overlay = null,
+    onInteract = null,
   },
   ref
 ) {
   return (
     <div className={`w-full ${className}`}>
-      <div className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] shadow-glass ring-1 ring-inset ring-white/[0.08] backdrop-blur-xl sm:rounded-3xl">
+      <div
+        className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] shadow-glass ring-1 ring-inset ring-white/[0.08] backdrop-blur-xl sm:rounded-3xl"
+        onPointerDown={onInteract ? () => onInteract() : undefined}
+      >
         <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/[0.06] via-transparent to-black/30 sm:rounded-3xl" />
         <video
           ref={ref}

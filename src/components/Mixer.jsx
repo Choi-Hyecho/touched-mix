@@ -178,7 +178,7 @@ export function Mixer({
                 isAdjustActive
                   ? "ring-2 ring-brand shadow-[0_0_28px_rgba(230,45,45,0.35)]"
                   : ""
-              }`}
+              } touch-none select-none`}
               aria-label={`${track.label} 트랙`}
             >
               {/* 볼륨 바(활성화된 트랙만 표시) */}

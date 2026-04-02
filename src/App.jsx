@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import songsData from "./data/songs.json";
 import {
@@ -27,7 +27,10 @@ export default function App() {
 
   const audioTracks = useMemo(
     () =>
-      (activeSong?.tracks ?? []).map((t) => ({ id: t.id, url: t.url })),
+      (activeSong?.tracks ?? []).map((t) => ({
+        id: t.id,
+        urls: Array.isArray(t.urls) ? t.urls : [t.url].filter(Boolean),
+      })),
     [activeSong]
   );
 
@@ -43,6 +46,7 @@ export default function App() {
     mediaReady,
     loadProgress,
     loadError,
+    loadStatus,
   } = useMultiAudio({
     songId: activeSong?.id ?? "",
     tracks: audioTracks,
@@ -70,11 +74,47 @@ export default function App() {
 
   const thumb = activeSong?.thumbnailUrl ?? "";
   const showLoading = !mediaReady && !loadError;
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const hideTimerRef = useRef(0);
+
+  const clearHideTimer = useCallback(() => {
+    if (hideTimerRef.current) {
+      window.clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = 0;
+    }
+  }, []);
+
+  const bumpControls = useCallback(() => {
+    setControlsVisible(true);
+    clearHideTimer();
+    // 재생 중일 때만 자동으로 숨김
+    if (started && isPlaying) {
+      hideTimerRef.current = window.setTimeout(() => {
+        setControlsVisible(false);
+      }, 2200);
+    }
+  }, [clearHideTimer, started, isPlaying]);
+
+  useEffect(() => {
+    // 세션 전엔 Start 버튼이 항상 보여야 함
+    if (!started) {
+      setControlsVisible(true);
+      clearHideTimer();
+      return;
+    }
+    // 재생 시작/재개 시 잠깐 보여줬다가 숨김 타이머 갱신
+    bumpControls();
+    return () => clearHideTimer();
+  }, [started, isPlaying, bumpControls, clearHideTimer]);
 
   return (
     <div className="relative min-h-[100dvh] overflow-x-hidden bg-ym-bg text-white">
       <OnboardingModal />
-      <VideoSkeletonScreen open={showLoading} progress={loadProgress} />
+      <VideoSkeletonScreen
+        open={showLoading}
+        progress={loadProgress}
+        status={loadStatus}
+      />
 
       <div
         className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
@@ -147,8 +187,9 @@ export default function App() {
             title={activeSong.title}
             sessionStarted={started}
             className="w-full"
+            onInteract={bumpControls}
             overlay={
-              mediaReady || loadError ? (
+              (mediaReady || loadError) && controlsVisible ? (
                 !started ? (
                   <SessionStartButton
                     onClick={handleStart}

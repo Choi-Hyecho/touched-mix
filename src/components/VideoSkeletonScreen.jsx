@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 /**
  * 미니멀 다크 모드 스켈레톤 — 좌→우 쉬머, 하단 재생 컨트롤 실루엣(블러)
  */
-export function VideoSkeletonScreen({ open, progress = 0 }) {
+export function VideoSkeletonScreen({ open, progress = 0, status = "" }) {
   return (
     <AnimatePresence>
       {open ? (
@@ -22,7 +22,7 @@ export function VideoSkeletonScreen({ open, progress = 0 }) {
         >
           <div className="flex min-h-[100dvh] flex-col items-center justify-center px-5 pb-12 pt-[max(2rem,env(safe-area-inset-top))]">
             <div className="relative w-full max-w-[min(100%,420px)]">
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/[0.06] bg-[#111] shadow-[0_24px_80px_rgba(0,0,0,0.65)] ring-1 ring-white/[0.04]">
+              <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/[0.06] bg-[#111] shadow-[0_24px_80px_rgba(0,0,0,0.65)] ring-1 ring-white/[0.04]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.045] via-transparent to-white/[0.02]" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.5)_100%)]" />
 
@@ -53,7 +53,13 @@ export function VideoSkeletonScreen({ open, progress = 0 }) {
               </div>
             </div>
 
-            <p className="mt-8 font-mono text-[0.7rem] tabular-nums tracking-[0.22em] text-white/22">
+            {status ? (
+              <p className="mt-6 max-w-[22rem] text-center text-xs font-medium text-white/55">
+                {status}
+              </p>
+            ) : null}
+
+            <p className="mt-3 font-mono text-[0.7rem] tabular-nums tracking-[0.22em] text-white/22">
               {Math.min(100, Math.max(0, Math.round(progress)))}%
             </p>
           </div>
