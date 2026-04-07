@@ -27,6 +27,15 @@ const VIDEO_RELAXED_READY_AFTER_MS = 24000;
 
 Howler.autoUnlock = false;
 
+/** 카카오톡·라인 등 인앱 브라우저 및 Android WebView는 Web Audio decodeAudioData 미지원 케이스 있음
+ *  → html5: true 로 폴백해 로딩 오류 방지. 싱크 오차는 드리프트 보정이 커버. */
+const USE_HTML5_AUDIO = (() => {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  return /KAKAOTALK|Line\/|Instagram|NAVER|DaumApps|FB_IAB|FBAN|FBAV/i.test(ua)
+    || (/Android/i.test(ua) && /wv\b|WebView/i.test(ua));
+})();
+
 /** 비디오 마스터 시각 + 선행(lead). duration 안에서만 클램프 */
 function getSyncTargetTime(video, leadSec = 0) {
   if (!video) return 0;
@@ -380,8 +389,8 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       const howl = new Howl({
         src: track.urls,
         preload: true,
-        // 전 플랫폼 Web Audio 경로로 통일 (싱크·볼륨 일관성). 디코딩은 로딩 시 한 번 수행.
-        html5: false,
+        // 인앱 브라우저·WebView는 Web Audio decodeAudioData 실패 케이스 있어 html5 폴백
+        html5: USE_HTML5_AUDIO,
       });
       // 기본 볼륨(0.8) 적용. mute는 별도로 처리.
       try {
