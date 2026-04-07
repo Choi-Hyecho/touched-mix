@@ -2,6 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import songsData from "./data/songs.json";
 import {
+  encodeMixState,
+  getInitialMixRouteState,
+} from "./utils/mixShare.js";
+import {
   CONTACT_ACCOUNT_EN,
   CONTACT_ACCOUNT_KO,
   CONTACT_INSTAGRAM_URL,
@@ -20,8 +24,20 @@ import { Player } from "./components/Player.jsx";
 
 export default function App() {
   const songs = useMemo(() => songsData, []);
-  const [songIndex, setSongIndex] = useState(0);
+  const [initialMixRoute] = useState(() => getInitialMixRouteState(songsData));
+  const [songIndex, setSongIndex] = useState(initialMixRoute.songIndex);
+  const [pendingShareMix, setPendingShareMix] = useState(initialMixRoute.preset);
+  const [shareAdjustTrackIds, setShareAdjustTrackIds] = useState(
+    () => initialMixRoute.preset?.adjustTrackIds ?? []
+  );
+  const [urlSyncEnabled, setUrlSyncEnabled] = useState(
+    initialMixRoute.preset === null
+  );
   const videoRef = useRef(null);
+  const videoSectionRef = useRef(null);
+  const selectedSongTabRef = useRef(null);
+  /** 공유 링크 첫 진입 시 영상·탭이 뷰포트 안에 보이도록 한 번만 스크롤 */
+  const scrollShareLandingRef = useRef(initialMixRoute.preset !== null);
 
   const activeSong = songs[songIndex] ?? songs[0];
 
@@ -42,6 +58,7 @@ export default function App() {
     trackVolumes,
     setTrackVolume,
     resetMix,
+    applyMixSnapshot,
     isPlaying,
     mediaReady,
     loadProgress,
@@ -71,6 +88,52 @@ export default function App() {
       /* 오디오 세션 실패 등 */
     }
   }, [start, mediaReady]);
+
+  useEffect(() => {
+    if (!mediaReady) return;
+    if (!pendingShareMix) return;
+    if (pendingShareMix.songId !== activeSong.id) {
+      setPendingShareMix(null);
+      setUrlSyncEnabled(true);
+      return;
+    }
+    applyMixSnapshot(pendingShareMix.muted, pendingShareMix.volumes);
+    setShareAdjustTrackIds(pendingShareMix.adjustTrackIds ?? []);
+    setPendingShareMix(null);
+    setUrlSyncEnabled(true);
+  }, [mediaReady, activeSong.id, pendingShareMix, applyMixSnapshot]);
+
+  useEffect(() => {
+    if (!mediaReady || !urlSyncEnabled) return;
+    const song = songs[songIndex];
+    if (!song?.tracks) return;
+    const tid = window.setTimeout(() => {
+      const ids = song.tracks.map((tr) => tr.id);
+      const encoded = encodeMixState(
+        song.id,
+        mutedTracks,
+        trackVolumes,
+        ids
+      );
+      const url = new URL(window.location.href);
+      url.searchParams.set("mix", encoded);
+      window.history.replaceState(null, "", url.toString());
+    }, 450);
+    return () => window.clearTimeout(tid);
+  }, [
+    mediaReady,
+    urlSyncEnabled,
+    songIndex,
+    mutedTracks,
+    trackVolumes,
+    songs,
+  ]);
+
+  const mixerShareAdjustSyncKey = useMemo(
+    () =>
+      `${activeSong.id}:${[...shareAdjustTrackIds].sort().join(",")}`,
+    [activeSong.id, shareAdjustTrackIds]
+  );
 
   const thumb = activeSong?.thumbnailUrl ?? "";
   const showLoading = !mediaReady && !loadError;
@@ -106,6 +169,36 @@ export default function App() {
     bumpControls();
     return () => clearHideTimer();
   }, [started, isPlaying, bumpControls, clearHideTimer]);
+
+  useEffect(() => {
+    if (!mediaReady) return;
+    if (!scrollShareLandingRef.current) return;
+    scrollShareLandingRef.current = false;
+
+    const run = () => {
+      selectedSongTabRef.current?.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+      videoSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+    };
+
+    const t = window.setTimeout(run, 120);
+    return () => window.clearTimeout(t);
+  }, [mediaReady]);
+
+  useEffect(() => {
+    selectedSongTabRef.current?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [songIndex]);
 
   return (
     <div className="relative min-h-[100dvh] overflow-x-hidden bg-ym-bg text-white">
@@ -165,8 +258,12 @@ export default function App() {
           {songs.map((song, i) => (
             <button
               key={song.id}
+              ref={i === songIndex ? selectedSongTabRef : null}
               type="button"
-              onClick={() => setSongIndex(i)}
+              onClick={() => {
+                if (i !== songIndex) setShareAdjustTrackIds([]);
+                setSongIndex(i);
+              }}
               className={`min-h-[44px] shrink-0 rounded-full border-2 px-4 py-2.5 text-sm font-medium transition sm:min-h-[48px] ${
                 i === songIndex
                   ? "border-brand bg-gradient-to-br from-neutral-950/95 via-zinc-900/90 to-brand/12 text-white shadow-[0_0_20px_rgba(230,45,45,0.22)]"
@@ -219,6 +316,10 @@ export default function App() {
             trackVolumes={trackVolumes}
             setTrackVolume={setTrackVolume}
             onResetMix={resetMix}
+            shareAdjustTrackIds={shareAdjustTrackIds}
+            shareAdjustSyncKey={mixerShareAdjustSyncKey}
+            shareDisabled={!mediaReady || !!loadError}
+            songTitle={activeSong?.title ?? ""}
           />
         </div>
 

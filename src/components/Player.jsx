@@ -25,6 +25,7 @@ export const Player = forwardRef(function Player(
           src={videoUrl}
           poster={posterUrl}
           playsInline
+          muted
           controls={sessionStarted}
           preload="auto"
         />

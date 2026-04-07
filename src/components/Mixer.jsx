@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Drum, Guitar, Mic, Music, Piano } from "lucide-react";
+import { ShareMixPanel } from "./ShareMixPanel.jsx";
 
 const trackBtnBase =
   "flex min-h-[48px] min-w-0 items-center justify-center rounded-2xl border px-3 py-3 text-center text-sm font-semibold leading-tight transition-[transform,box-shadow,background-color,border-color,color] duration-200 active:scale-[0.97] sm:min-h-[52px] sm:text-[0.9375rem]";
@@ -9,6 +10,18 @@ const trackOn =
 
 const trackOff =
   "border-white/[0.12] bg-white/[0.06] text-ym-muted shadow-none backdrop-blur-md";
+
+/** 조절 모드 볼륨 바: 뮤트 시 빨강 대신 차분한 회색 + 은은한 스트라이프(비활성 느낌) */
+function volumeAdjustBarBackground(vol, isMuted) {
+  const p = Math.round(Math.min(1, Math.max(0, vol)) * 100);
+  if (isMuted) {
+    return [
+      `repeating-linear-gradient(135deg, rgba(255,255,255,0.045) 0px, rgba(255,255,255,0.045) 3px, transparent 3px, transparent 7px)`,
+      `linear-gradient(90deg, rgba(72, 74, 82, 0.88) 0%, rgba(58, 60, 68, 0.78) ${p}%, rgba(28, 29, 34, 0.62) ${p}%, rgba(16, 17, 20, 0.45) 100%)`,
+    ].join(", ");
+  }
+  return `linear-gradient(90deg, rgba(230, 45, 45, 0.86) 0%, rgba(230, 45, 45, 0.72) ${p}%, transparent ${p}%)`;
+}
 
 function TrackIcon({ track }) {
   const id = track?.id ?? "";
@@ -58,8 +71,16 @@ export function Mixer({
   onToggleTrack,
   setTrackVolume,
   onResetMix,
+  shareAdjustTrackIds = [],
+  shareAdjustSyncKey = "",
+  shareDisabled = false,
+  songTitle = "",
 }) {
   const [activeAdjustIds, setActiveAdjustIds] = useState(() => new Set());
+
+  useEffect(() => {
+    setActiveAdjustIds(new Set(shareAdjustTrackIds));
+  }, [shareAdjustSyncKey]);
   const pressTimerRef = useRef(0);
   const draggingRef = useRef(false);
   const dragTrackIdRef = useRef(null);
@@ -90,7 +111,11 @@ export function Mixer({
 
   const handlePointerDown = (e, trackId) => {
     // 모바일 스크롤 방지용 포인터 캡처
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch {
+      /* noop */
+    }
 
     draggingRef.current = false;
     dragTrackIdRef.current = trackId;
@@ -184,13 +209,10 @@ export function Mixer({
               {/* 볼륨 바(활성화된 트랙만 표시) */}
               {isAdjustActive ? (
                 <span
-                  className="absolute inset-0 opacity-90"
+                  className="absolute inset-0 opacity-90 transition-opacity duration-200"
                   aria-hidden
                   style={{
-                    background:
-                      `linear-gradient(90deg, rgba(230, 45, 45, 0.86) 0%, rgba(230, 45, 45, 0.72) ${Math.round(
-                        vol * 100
-                      )}%, transparent ${Math.round(vol * 100)}%)`,
+                    background: volumeAdjustBarBackground(vol, isMuted),
                   }}
                 />
               ) : null}
@@ -200,6 +222,10 @@ export function Mixer({
             </button>
           );
         })}
+      </div>
+
+      <div className="mt-4 w-full border-t border-white/[0.1] pt-4">
+        <ShareMixPanel disabled={shareDisabled} songTitle={songTitle} />
       </div>
     </section>
   );

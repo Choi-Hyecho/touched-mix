@@ -83,6 +83,9 @@ export function OnboardingModal() {
                 <span>
                   버튼으로 파트별 음소거를 켜고 끌 수 있어요.{" "}
                 </span>
+                <span>
+                  버튼을 꾹 누르면 파트별 음량을 조절할 수 있어요.{" "}
+                </span>
               </p>
               <FanMadeLegalNotice className="text-[0.8125rem] leading-relaxed text-white/65" />
               <p className="text-white/55">
