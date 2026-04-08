@@ -14,10 +14,21 @@ const TIMEUPDATE_HARD_SYNC_MIN_MS = 750;
 const WEB_AUDIO_SYNC_LEAD_SEC = 0.06;
 const DEFAULT_TRACK_VOLUME = 0.8;
 
+/** 트랙별 순차 로딩 중 표시할 이스터에그 문구 (track.id → 문구) */
+const TRACK_LOAD_MESSAGES = {
+  vocal1: "윤민이 마이크에 츠츠츠 중… 🎤",
+  vocal2: "오빠들 코러스 쌓는 중… 🎵",
+  inst:   "셋 리스트 부착 중…",
+  piano:  "도현이 맥북 켜는 중… 💻",
+  guitar: "마이크에 피크 끼우는 중…",
+  bass:   "비킴이 피크 찾는 중…",
+  drum:   "승빈이 스네어 튜닝 중… 🥁",
+};
+
 /** Web Audio 디코딩·네트워크 여유 (짧으면 모바일에서 오류로 끊김) */
 const AUDIO_LOAD_TIMEOUT_MS = 28000;
-/** 재생 직후 끊김 완화: 시작 구간 최소 버퍼(초) */
-const VIDEO_MIN_BUFFER_SEC = 0.85;
+/** 재생 직후 끊김 완화: 시작 구간 최소 버퍼(초) — LTE 등 느린 망에서 시작 직후 버벅임 방지 */
+const VIDEO_MIN_BUFFER_SEC = 2.0;
 /** 비디오+오디오 조건 충족 후 짧은 안정화 시간 뒤 UI 해제 */
 const PRELOAD_SETTLE_MS = 500;
 /** video ref 바인딩 폴링 타임아웃 */
@@ -383,9 +394,23 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
 
     const list = tracksRef.current;
 
-    const map = new Map();
-    list.forEach((track) => {
-      setLoadStatus(`밴드 사운드 체크 중… (${track.id})`);
+    howlsRef.current = new Map();
+
+    // 초기 볼륨 상태(0.8) 세팅
+    const initialVolumes = {};
+    list.forEach((t) => {
+      initialVolumes[t.id] = DEFAULT_TRACK_VOLUME;
+    });
+    setTrackVolumes(initialVolumes);
+
+    // 순차 로딩: 이전 트랙 완료 후 다음 트랙 생성 — LTE 대역폭 경합 방지
+    const loadTrackAt = (index) => {
+      if (gen !== preloadGenRef.current) return;
+      if (index >= list.length) return;
+
+      const track = list[index];
+      setLoadStatus(TRACK_LOAD_MESSAGES[track.id] ?? `${track.id} 준비 중…`);
+
       const howl = new Howl({
         src: track.urls,
         preload: true,
@@ -399,7 +424,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
         /* noop */
       }
       volumesRef.current.set(track.id, DEFAULT_TRACK_VOLUME);
-      map.set(track.id, howl);
+      howlsRef.current.set(track.id, howl);
 
       const loadTimeoutId = window.setTimeout(() => {
         if (gen !== preloadGenRef.current) return;
@@ -412,21 +437,16 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
         audioReadyIdsRef.current.add(track.id);
         recalcLoadProgress();
         tryMarkMediaReady(gen);
+        loadTrackAt(index + 1); // 다음 트랙 로드 시작
       });
       howl.once("loaderror", () => {
         if (gen !== preloadGenRef.current) return;
         window.clearTimeout(loadTimeoutId);
         setLoadError(`오디오 트랙을 불러오지 못했습니다. (${track.id})`);
       });
-    });
-    howlsRef.current = map;
+    };
 
-    // 초기 볼륨 상태(0.8) 세팅
-    const initialVolumes = {};
-    list.forEach((t) => {
-      initialVolumes[t.id] = DEFAULT_TRACK_VOLUME;
-    });
-    setTrackVolumes(initialVolumes);
+    loadTrackAt(0);
 
     const bindVideo = (video) => {
       const markVideoReady = () => {

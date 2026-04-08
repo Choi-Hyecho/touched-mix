@@ -8,3 +8,9 @@
   }
 }
 
+/* 전체화면·PiP 버튼 숨김 — Safari/iOS WebKit */
+video::-webkit-media-controls-fullscreen-button,
+video::-webkit-media-controls-picture-in-picture-button {
+  display: none;
+}
+

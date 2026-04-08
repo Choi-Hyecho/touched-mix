@@ -27,6 +27,8 @@ export const Player = forwardRef(function Player(
           playsInline
           muted
           controls={sessionStarted}
+          controlsList="nofullscreen nodownload noremoteplayback"
+          disablePictureInPicture
           preload="auto"
         />
         {overlay ? (

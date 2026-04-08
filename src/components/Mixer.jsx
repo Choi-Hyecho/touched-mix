@@ -156,8 +156,13 @@ export function Mixer({
 
   const handlePointerUp = () => {
     clearPressTimer();
+    const wasAdjusting = activeAdjustLookup.get(dragTrackIdRef.current) === true;
     dragTrackIdRef.current = null;
-    // draggingRef는 click에서 참조 후 false로 되돌림
+    // 볼륨 조절 모드가 아니었으면 즉시 초기화
+    // iOS는 롱프레스 후 click이 안 발생해 draggingRef가 true인 채로 남는 버그 방지
+    if (!wasAdjusting) {
+      draggingRef.current = false;
+    }
   };
 
   return (
