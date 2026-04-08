@@ -200,8 +200,25 @@ export default function App() {
     });
   }, [songIndex]);
 
+  const isKakao = useMemo(() => {
+    if (typeof navigator === "undefined") return false;
+    const ua = navigator.userAgent || "";
+    return /KAKAOTALK/i.test(ua);
+  }, []);
+
   return (
     <div className="relative min-h-[100dvh] overflow-x-hidden bg-ym-bg text-white">
+      {isKakao && (
+        <div className="fixed inset-0 z-[300] flex flex-col items-center justify-center gap-5 bg-black/95 p-6 text-center backdrop-blur-sm">
+          <p className="text-2xl">🌐</p>
+          <p className="text-base font-bold text-white">카카오톡 브라우저에서는<br />음악이 제대로 재생되지 않아요</p>
+          <p className="text-sm text-white/60 leading-relaxed">
+            우측 상단 <span className="font-bold text-white/90">⋯</span> 메뉴에서<br />
+            <span className="font-bold text-white/90">"기본 브라우저로 열기"</span>를 눌러주세요
+          </p>
+          <p className="text-xs text-white/40">Safari 또는 Chrome을 권장해요</p>
+        </div>
+      )}
       <OnboardingModal />
       <VideoSkeletonScreen
         open={showLoading}

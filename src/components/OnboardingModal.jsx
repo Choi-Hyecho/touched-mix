@@ -6,32 +6,14 @@ import {
   CONTACT_ACCOUNT_KO,
   CONTACT_INSTAGRAM_URL,
   CONTACT_X_URL,
-  FORCE_ONBOARDING_EVERY_LOAD,
-  ONBOARDING_STORAGE_KEY,
 } from "../constants/onboarding.js";
 import { FanMadeLegalNotice } from "./FanMadeLegalNotice.jsx";
 
-function readDismissed() {
-  if (typeof window === "undefined") return false;
-  try {
-    return window.localStorage.getItem(ONBOARDING_STORAGE_KEY) === "true";
-  } catch {
-    return false;
-  }
-}
-
 export function OnboardingModal() {
-  const [open, setOpen] = useState(() => {
-    if (FORCE_ONBOARDING_EVERY_LOAD) return true;
-    return !readDismissed();
-  });
+  // 매 페이지 로드마다 표시 (localStorage 저장 없음)
+  const [open, setOpen] = useState(true);
 
   const dismiss = useCallback(() => {
-    try {
-      window.localStorage.setItem(ONBOARDING_STORAGE_KEY, "true");
-    } catch {
-      /* ignore */
-    }
     setOpen(false);
   }, []);
 
