@@ -1,32 +1,21 @@
 [
-  {
-    "id": "time_machine",
-    "title": "다비치 - 타임머신🚀",
-    "videoUrl": "/videos/time.webm",
-    "thumbnailUrl": "/images/thumb_time_machine.jpg",
-    "tracks": [
-      { "id": "vocal1", "label": "보컬1", "urls": ["/audio/time_machine/vocal1.m4a"] },
-      { "id": "vocal2", "label": "보컬2", "urls": ["/audio/time_machine/vocal2.m4a"] },
-      { "id": "inst", "label": "반주주", "urls": ["/audio/time_machine/inst.m4a"] }
-    ]
-  },
-  {
-    "id": "chap",
-    "title": "더 시즌즈 (10cm의 쓰담쓰담) - 찹쌀떡",
-    "videoUrl": "/videos/chap.webm",
+   
+    {
+    "id": "life",
+    "title": "LIFE! (원곡 자우림)",
+    "videoUrl": "/videos/life.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
-      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/chap/main.m4a"] },
-      { "id": "vocal2", "label": "코러스", "urls": ["/audio/chap/sub.m4a"] },
-      { "id": "piano", "label": "피아노", "urls": ["/audio/chap/2_piano.m4a"] },
-      { "id": "guitar", "label": "기타", "urls": ["/audio/chap/2_guitar.m4a"] },
-      { "id": "bass", "label": "베이스", "urls": ["/audio/chap/2_bass.m4a"] },
-      { "id": "drum", "label": "드럼", "urls": ["/audio/chap/2_drums.m4a"] }
+      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/life/vocal.m4a"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/life/piano.m4a"] },
+      { "id": "guitar", "label": "기타", "urls": ["/audio/life/guitar.m4a"] },
+      { "id": "bass", "label": "베이스", "urls": ["/audio/life/bass.m4a"] },
+      { "id": "drum", "label": "드럼", "urls": ["/audio/life/drums.m4a"] }
     ]
   },
   {
     "id": "golden",
-    "title": "더 시즌즈 (10cm의 쓰담쓰담) - GOLDEN",
+    "title": "GOLDEN (원곡 헌트릭스)",
     "videoUrl": "/videos/golden.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
@@ -35,6 +24,19 @@
       { "id": "guitar", "label": "기타", "urls": ["/audio/golden/guitar.m4a"] },
       { "id": "bass", "label": "베이스", "urls": ["/audio/golden/bass.m4a"] },
       { "id": "drum", "label": "드럼", "urls": ["/audio/golden/drum.m4a"] }
+    ]
+  },
+  {
+    "id": "heart",
+    "title": "REBEL HEART💖 (원곡 아이브)",
+    "videoUrl": "/videos/heart.webm",
+    "thumbnailUrl": "/images/thumb_challenge_02.jpg",
+    "tracks": [
+      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/heart/vocal.m4a"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/heart/piano.m4a"] },
+      { "id": "guitar", "label": "기타", "urls": ["/audio/heart/guitar.m4a"] },
+      { "id": "bass", "label": "베이스", "urls": ["/audio/heart/bass.m4a"] },
+      { "id": "drum", "label": "드럼", "urls": ["/audio/heart/drums.m4a"] }
     ]
   }
 ]
