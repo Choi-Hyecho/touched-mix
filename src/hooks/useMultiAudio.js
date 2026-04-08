@@ -16,12 +16,12 @@ const DEFAULT_TRACK_VOLUME = 0.8;
 
 /** 트랙별 순차 로딩 중 표시할 이스터에그 문구 (track.id → 문구) */
 const TRACK_LOAD_MESSAGES = {
-  vocal1: "윤민이 마이크에 츠츠츠 중… 🎤",
+  vocal1: "윤민이 마이크에 츠츠츠 중…🎤",
   vocal2: "오빠들 코러스 쌓는 중… 🎵",
-  inst:   "셋 리스트 부착 중…",
-  piano:  "도현이 맥북 켜는 중… 💻",
-  guitar: "마이크에 피크 끼우는 중…",
-  bass:   "비킴이 피크 찾는 중…",
+  inst:   "셋 리스트 부착 중…📃",
+  piano:  "도현이 키보드 세팅 중… 🎹",
+  guitar: "마이크에 피크 끼우는 중…🎤",
+  bass:   "비킴이 피크 찾는 중…🫶",
   drum:   "승빈이 스네어 튜닝 중… 🥁",
 };
 
@@ -350,7 +350,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       window.clearTimeout(mediaReadySettleTimerRef.current);
       mediaReadySettleTimerRef.current = 0;
     }
-    setLoadStatus("윤민이 물 마시는 중...");
+    setLoadStatus("윤민이 물 마시는 중...💧");
     mediaReadySettleTimerRef.current = window.setTimeout(() => {
       mediaReadySettleTimerRef.current = 0;
       if (gen !== preloadGenRef.current) return;
@@ -379,7 +379,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
     setMediaReady(false);
     setLoadProgress(0);
     setLoadError(null);
-    setLoadStatus("승빈이 차이나 심벌 세팅 중…");
+    setLoadStatus("승빈이 드럼 스틱 꺼내는 중…🥁");
     startedRef.current = false;
     setStarted(false);
     clearSyncInterval();
@@ -454,7 +454,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       const markVideoReady = () => {
         if (videoReadyRef.current) return;
         videoReadyRef.current = true;
-        setLoadStatus("윤민이 손목에 스카프 묶는 중...");
+        setLoadStatus("윤민이 손목에 스카프 묶는 중...✨");
       };
 
       const tryMarkVideoReady = () => {
@@ -466,7 +466,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
 
       const onVideoProgress = () => {
         if (gen !== preloadGenRef.current) return;
-        setLoadStatus("비킴이 베이스 스트랩 연결 중…");
+        setLoadStatus("비킴이 베이스 스트랩 연결 중…🐻‍❄️");
         tryMarkVideoReady();
         recalcLoadProgress();
         tryMarkMediaReady(gen);
@@ -488,7 +488,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
 
       const onVideoLoadedMetadata = () => {
         if (gen !== preloadGenRef.current) return;
-        setLoadStatus("도현이 맥북 켜는 중…");
+        setLoadStatus("도현이 맥북 켜는 중…👨‍💻");
         tryMarkVideoReady();
         recalcLoadProgress();
         tryMarkMediaReady(gen);
@@ -648,6 +648,23 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
     startingRef.current = true;
 
     const run = async () => {
+      const rawT = video.currentTime;
+      const t = mergeVideoTimeForSlaveSync(
+        rawT,
+        lastTrustedVideoTimeRef.current
+      );
+      lastTrustedVideoTimeRef.current = t;
+
+      // AudioContext resume 전에 먼저 음소거+seek — resume 순간 버퍼가 새어나오는 팝 노이즈 방지
+      howlsRef.current.forEach((howl) => {
+        try {
+          howl.mute(true);
+          seekHowlSeconds(howl, t, "start-pre-resume");
+        } catch {
+          /* noop */
+        }
+      });
+
       if (Howler.ctx) {
         try {
           await Howler.ctx.resume();
@@ -656,12 +673,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
         }
       }
 
-      const rawT = video.currentTime;
-      const t = mergeVideoTimeForSlaveSync(
-        rawT,
-        lastTrustedVideoTimeRef.current
-      );
-      lastTrustedVideoTimeRef.current = t;
+      // resume 완료 후 실제 뮤트 상태 적용
       const initialMuted = {};
       howlsRef.current.forEach((howl, id) => {
         seekHowlSeconds(howl, t, "start");
