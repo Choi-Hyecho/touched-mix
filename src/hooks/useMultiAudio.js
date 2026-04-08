@@ -907,6 +907,38 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       howlsRef.current.forEach((howl) => howl.pause());
     };
 
+    /** LTE 등 버퍼링 시작: 비디오 멈추는 동안 오디오도 같이 멈춤 */
+    const onWaiting = () => {
+      clearSyncInterval();
+      howlsRef.current.forEach((howl) => {
+        try { howl.pause(); } catch { /* noop */ }
+      });
+      logAudioSync("video-waiting (buffering) → audio paused", {
+        videoT: video.currentTime,
+      });
+    };
+
+    /** 버퍼링 끝나고 재개: 비디오 위치에 맞춰 오디오 재싱크 후 재생 */
+    const onPlaying = () => {
+      const v = videoRef?.current;
+      if (!v || v.paused) return;
+      const t = getSyncTargetTime(v, 0);
+      lastTrustedVideoTimeRef.current = t;
+      howlsRef.current.forEach((howl) => {
+        try {
+          seekHowlSeconds(howl, t, "playing-resync");
+          howl.play();
+        } catch { /* noop */ }
+      });
+      skipTimeDriftSyncUntilRef.current = Date.now() + 300;
+      clearSyncInterval();
+      syncIntervalRef.current = window.setInterval(runPeriodicDriftCorrection, SYNC_INTERVAL_MS);
+      logAudioSync("video-playing (buffering end) → audio resynced", {
+        videoT: v.currentTime,
+        seekTo: t,
+      });
+    };
+
     const onSeeking = () => {
       isSeekingRef.current = true;
       const v = videoRef?.current;
@@ -1000,6 +1032,8 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
 
     video.addEventListener("play", onPlay);
     video.addEventListener("pause", onPause);
+    video.addEventListener("waiting", onWaiting);
+    video.addEventListener("playing", onPlaying);
     video.addEventListener("seeking", onSeeking);
     video.addEventListener("seeked", onSeeked);
     video.addEventListener("timeupdate", onTimeUpdate);
@@ -1011,6 +1045,8 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
     return () => {
       video.removeEventListener("play", onPlay);
       video.removeEventListener("pause", onPause);
+      video.removeEventListener("waiting", onWaiting);
+      video.removeEventListener("playing", onPlaying);
       video.removeEventListener("seeking", onSeeking);
       video.removeEventListener("seeked", onSeeked);
       video.removeEventListener("timeupdate", onTimeUpdate);
