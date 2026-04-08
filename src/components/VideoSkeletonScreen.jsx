@@ -1,12 +1,63 @@
 import { AnimatePresence, motion } from "framer-motion";
+import {
+  CONTACT_INSTAGRAM_URL,
+  CONTACT_X_URL,
+} from "../constants/onboarding.js";
+
+function ErrorScreen() {
+  return (
+    <motion.div
+      key="error-screen"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35 }}
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0a0a0a] px-6 text-center"
+    >
+      <p className="mb-3 text-4xl">🛠️</p>
+      <p className="mb-1 text-lg font-bold text-white">서버가 잠시 아파요</p>
+      <p className="mb-6 text-sm leading-relaxed text-white/55">
+        일시적인 오류가 발생했어요.<br />
+        잠시 후 새로고침 해주세요.
+      </p>
+      <div className="mb-8 flex gap-3">
+        <a
+          href={CONTACT_X_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full border border-white/20 bg-white/[0.07] px-5 py-2.5 text-sm font-semibold text-white/90 transition hover:bg-white/[0.12]"
+        >
+          X로 문의
+        </a>
+        <a
+          href={CONTACT_INSTAGRAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full border border-white/20 bg-white/[0.07] px-5 py-2.5 text-sm font-semibold text-white/90 transition hover:bg-white/[0.12]"
+        >
+          Instagram
+        </a>
+      </div>
+      <button
+        type="button"
+        onClick={() => window.location.reload()}
+        className="text-xs text-white/30 underline underline-offset-2"
+      >
+        새로고침
+      </button>
+    </motion.div>
+  );
+}
 
 /**
  * 미니멀 다크 모드 스켈레톤 — 좌→우 쉬머, 하단 재생 컨트롤 실루엣(블러)
  */
-export function VideoSkeletonScreen({ open, progress = 0, status = "" }) {
+export function VideoSkeletonScreen({ open, error = false, progress = 0, status = "" }) {
   return (
     <AnimatePresence>
-      {open ? (
+      {error ? (
+        <ErrorScreen key="error-screen" />
+      ) : open ? (
         <motion.div
           key="video-skeleton"
           role="progressbar"
@@ -68,3 +119,4 @@ export function VideoSkeletonScreen({ open, progress = 0, status = "" }) {
     </AnimatePresence>
   );
 }
+

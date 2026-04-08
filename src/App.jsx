@@ -222,6 +222,7 @@ export default function App() {
       <OnboardingModal />
       <VideoSkeletonScreen
         open={showLoading}
+        error={!!loadError}
         progress={loadProgress}
         status={loadStatus}
       />
@@ -250,15 +251,6 @@ export default function App() {
           pointerEvents: mediaReady || loadError ? "auto" : "none",
         }}
       >
-        {loadError ? (
-          <div
-            className="mb-4 rounded-xl border border-red-500/40 bg-red-950/50 px-4 py-3 text-center text-sm text-red-200 backdrop-blur-md"
-            role="alert"
-          >
-            {loadError}
-          </div>
-        ) : null}
-
         <header className="mb-4 flex flex-col items-center gap-1 text-center">
           <p className="font-display text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-ym-muted">
             TOUCHED
