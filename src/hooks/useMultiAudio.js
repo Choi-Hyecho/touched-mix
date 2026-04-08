@@ -25,8 +25,8 @@ const TRACK_LOAD_MESSAGES = {
   drum:   "승빈이 스네어 튜닝 중… 🥁",
 };
 
-/** Web Audio 디코딩·네트워크 여유 (짧으면 모바일에서 오류로 끊김) */
-const AUDIO_LOAD_TIMEOUT_MS = 28000;
+/** Web Audio 디코딩·네트워크 여유 — LTE 등 느린 망에서 순차 로딩 시 충분히 기다림 */
+const AUDIO_LOAD_TIMEOUT_MS = 90000;
 /** 재생 직후 끊김 완화: 시작 구간 최소 버퍼(초) — LTE 등 느린 망에서 시작 직후 버벅임 방지 */
 const VIDEO_MIN_BUFFER_SEC = 2.0;
 /** 비디오+오디오 조건 충족 후 짧은 안정화 시간 뒤 UI 해제 */
@@ -216,6 +216,8 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
   /** 동일 프레임에 play 리스너가 두 번 도는 경우 디바운스 */
   const lastPlayStaggerWallMsRef = useRef(0);
   const mediaReadySettleTimerRef = useRef(0);
+  /** waiting 이벤트가 실제로 발생했을 때만 playing에서 재싱크 — 일반 재생 시 이중 트리거 방지 */
+  const isBufferingRef = useRef(false);
 
   const clearSyncInterval = useCallback(() => {
     if (syncIntervalRef.current) {
@@ -909,6 +911,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
 
     /** LTE 등 버퍼링 시작: 비디오 멈추는 동안 오디오도 같이 멈춤 */
     const onWaiting = () => {
+      isBufferingRef.current = true;
       clearSyncInterval();
       howlsRef.current.forEach((howl) => {
         try { howl.pause(); } catch { /* noop */ }
@@ -918,8 +921,10 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       });
     };
 
-    /** 버퍼링 끝나고 재개: 비디오 위치에 맞춰 오디오 재싱크 후 재생 */
+    /** 버퍼링 끝나고 재개: waiting이 선행됐을 때만 재싱크 — 일반 play와 이중 트리거 방지 */
     const onPlaying = () => {
+      if (!isBufferingRef.current) return;
+      isBufferingRef.current = false;
       const v = videoRef?.current;
       if (!v || v.paused) return;
       const t = getSyncTargetTime(v, 0);

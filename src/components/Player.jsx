@@ -29,7 +29,7 @@ export const Player = forwardRef(function Player(
           controls={sessionStarted}
           controlsList="nofullscreen nodownload noremoteplayback"
           disablePictureInPicture
-          preload="auto"
+          preload="metadata"
         />
         {overlay ? (
           <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center p-4 sm:p-6">
