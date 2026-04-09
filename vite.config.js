@@ -20,7 +20,7 @@ export default defineConfig({
             urlPattern: /\/audio\/.*\.m4a$/,
             handler: "CacheFirst",
             options: {
-              cacheName: "audio-cache-v1",
+              cacheName: "audio-cache-v2",
               expiration: {
                 maxEntries: 60,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30일
