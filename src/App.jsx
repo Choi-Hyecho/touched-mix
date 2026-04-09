@@ -290,7 +290,7 @@ export default function App() {
             ref={videoRef}
             videoUrl={activeSong.videoUrl}
             posterUrl={activeSong.thumbnailUrl}
-            title={activeSong.title}
+            title={activeSong.name ?? activeSong.title}
             sessionStarted={started}
             className="w-full"
             onInteract={bumpControls}
@@ -328,7 +328,7 @@ export default function App() {
             shareAdjustTrackIds={shareAdjustTrackIds}
             shareAdjustSyncKey={mixerShareAdjustSyncKey}
             shareDisabled={!mediaReady || !!loadError}
-            songTitle={activeSong?.title ?? ""}
+            songTitle={activeSong?.name ?? ""}
           />
         </div>
 
