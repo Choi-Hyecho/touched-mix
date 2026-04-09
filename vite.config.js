@@ -17,7 +17,7 @@ export default defineConfig({
         runtimeCaching: [
           {
             // 오디오 m4a — StaleWhileRevalidate: 캐시에서 빠르게 서빙 + 백그라운드에서 최신 파일 갱신
-            urlPattern: /\/audio\/.*\.m4a$/,
+            urlPattern: /\/audio\/.*\.m4a/,
             handler: "StaleWhileRevalidate",
             options: {
               cacheName: "audio-cache-v3",

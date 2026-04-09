@@ -6,12 +6,12 @@
     "videoUrl": "/videos/mam.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
-      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/mam/vocal.m4a"] },
-      { "id": "vocal2", "label": "보컬2", "urls": ["/audio/mam/vocal2.m4a"] },
-      { "id": "piano", "label": "피아노", "urls": ["/audio/mam/key.m4a"] },
-      { "id": "guitar", "label": "기타", "urls": ["/audio/mam/guitar.m4a"] },
-      { "id": "bass", "label": "베이스", "urls": ["/audio/mam/bass.m4a"] },
-      { "id": "drum", "label": "드럼", "urls": ["/audio/mam/drums.m4a"] }
+      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/mam/vocal.m4a?v=1"] },
+      { "id": "vocal2", "label": "보컬2", "urls": ["/audio/mam/vocal2.m4a?v=1"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/mam/key.m4a?v=1"] },
+      { "id": "guitar", "label": "기타", "urls": ["/audio/mam/guitar.m4a?v=1"] },
+      { "id": "bass", "label": "베이스", "urls": ["/audio/mam/bass.m4a?v=1"] },
+      { "id": "drum", "label": "드럼", "urls": ["/audio/mam/drums.m4a?v=1"] }
     ]
   },
     {
@@ -21,11 +21,11 @@
     "videoUrl": "/videos/life.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
-      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/life/vocal.m4a"] },
-      { "id": "piano", "label": "피아노", "urls": ["/audio/life/piano.m4a"] },
-      { "id": "guitar", "label": "기타", "urls": ["/audio/life/guitar.m4a"] },
-      { "id": "bass", "label": "베이스", "urls": ["/audio/life/bass.m4a"] },
-      { "id": "drum", "label": "드럼", "urls": ["/audio/life/drums.m4a"] }
+      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/life/vocal.m4a?v=1"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/life/piano.m4a?v=1"] },
+      { "id": "guitar", "label": "기타", "urls": ["/audio/life/guitar.m4a?v=1"] },
+      { "id": "bass", "label": "베이스", "urls": ["/audio/life/bass.m4a?v=1"] },
+      { "id": "drum", "label": "드럼", "urls": ["/audio/life/drums.m4a?v=1"] }
     ]
   },
   {
@@ -35,11 +35,11 @@
     "videoUrl": "/videos/golden.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
-      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/golden/vocal.m4a"] },
-      { "id": "piano", "label": "피아노", "urls": ["/audio/golden/piano.m4a"] },
-      { "id": "guitar", "label": "기타", "urls": ["/audio/golden/guitar.m4a"] },
-      { "id": "bass", "label": "베이스", "urls": ["/audio/golden/bass.m4a"] },
-      { "id": "drum", "label": "드럼", "urls": ["/audio/golden/drum.m4a"] }
+      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/golden/vocal.m4a?v=1"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/golden/piano.m4a?v=1"] },
+      { "id": "guitar", "label": "기타", "urls": ["/audio/golden/guitar.m4a?v=1"] },
+      { "id": "bass", "label": "베이스", "urls": ["/audio/golden/bass.m4a?v=1"] },
+      { "id": "drum", "label": "드럼", "urls": ["/audio/golden/drum.m4a?v=1"] }
     ]
   },
   {
@@ -49,11 +49,11 @@
     "videoUrl": "/videos/heart.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
-      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/heart/vocal.m4a"] },
-      { "id": "piano", "label": "피아노", "urls": ["/audio/heart/key.m4a"] },
-      { "id": "guitar", "label": "기타", "urls": ["/audio/heart/guitar.m4a"] },
-      { "id": "bass", "label": "베이스", "urls": ["/audio/heart/bass.m4a"] },
-      { "id": "drum", "label": "드럼", "urls": ["/audio/heart/drums.m4a"] }
+      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/heart/vocal.m4a?v=1"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/heart/key.m4a?v=1"] },
+      { "id": "guitar", "label": "기타", "urls": ["/audio/heart/guitar.m4a?v=1"] },
+      { "id": "bass", "label": "베이스", "urls": ["/audio/heart/bass.m4a?v=1"] },
+      { "id": "drum", "label": "드럼", "urls": ["/audio/heart/drums.m4a?v=1"] }
     ]
   }
 ]
