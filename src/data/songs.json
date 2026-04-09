@@ -8,7 +8,7 @@
     "tracks": [
       { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/mam/vocal.m4a"] },
       { "id": "vocal2", "label": "보컬2", "urls": ["/audio/mam/vocal2.m4a"] },
-      { "id": "piano", "label": "피아노", "urls": ["/audio/mam/piano.m4a"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/mam/key.m4a"] },
       { "id": "guitar", "label": "기타", "urls": ["/audio/mam/guitar.m4a"] },
       { "id": "bass", "label": "베이스", "urls": ["/audio/mam/bass.m4a"] },
       { "id": "drum", "label": "드럼", "urls": ["/audio/mam/drums.m4a"] }
