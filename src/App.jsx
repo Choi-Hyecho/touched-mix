@@ -253,11 +253,8 @@ export default function App() {
       >
         <header className="mb-4 flex flex-col items-center gap-1 text-center">
           <p className="font-display text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-ym-muted">
-            TOUCHED
+            RE-TOUCHED : STEMS PLAYER
           </p>
-          <h1 className="text-lg font-bold tracking-tight sm:text-xl">
-            챌린지 믹서
-          </h1>
         </header>
 
         <nav
@@ -356,7 +353,7 @@ export default function App() {
             </a>
           </p>
           <p className="font-display tabular-nums tracking-wide text-ym-muted/55">
-            TOUCHED Mixer · v0.0.1
+            RE-TOUCHED : STEMS PLAYER · v0.0.1
           </p>
         </footer>
       </motion.div>
