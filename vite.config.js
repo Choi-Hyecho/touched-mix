@@ -16,17 +16,17 @@ export default defineConfig({
 
         runtimeCaching: [
           {
-            // 오디오 m4a — CacheFirst: 한 번 받으면 캐시에서 바로 서빙
+            // 오디오 m4a — StaleWhileRevalidate: 캐시에서 빠르게 서빙 + 백그라운드에서 최신 파일 갱신
             urlPattern: /\/audio\/.*\.m4a$/,
-            handler: "CacheFirst",
+            handler: "StaleWhileRevalidate",
             options: {
-              cacheName: "audio-cache-v2",
+              cacheName: "audio-cache-v3",
               expiration: {
                 maxEntries: 60,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30일
               },
               cacheableResponse: { statuses: [200] },
-              rangeRequests: true, // 브라우저 range request(부분 로딩) 지원
+              rangeRequests: true,
             },
           },
           {
