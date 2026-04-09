@@ -2,7 +2,7 @@
    {
     "id": "mam",
     "title": "아 마음대로 다 된다❗",
-    "name": "마음대로 다 된다! / Dragon Pony",
+    "name": "아 마음대로 다 된다! / Dragon Pony",
     "videoUrl": "/videos/mam.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
@@ -50,7 +50,7 @@
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
       { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/heart/vocal.m4a"] },
-      { "id": "piano", "label": "피아노", "urls": ["/audio/heart/piano.m4a"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/heart/key.m4a"] },
       { "id": "guitar", "label": "기타", "urls": ["/audio/heart/guitar.m4a"] },
       { "id": "bass", "label": "베이스", "urls": ["/audio/heart/bass.m4a"] },
       { "id": "drum", "label": "드럼", "urls": ["/audio/heart/drums.m4a"] }

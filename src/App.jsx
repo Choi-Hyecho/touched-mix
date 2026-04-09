@@ -255,7 +255,9 @@ export default function App() {
           <p className="font-display text-sm font-semibold uppercase tracking-[0.35em] text-ym-muted">
             RE-TOUCHED
           </p>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">STEMS PLAYER</h1>
+          <h1 className="text-sm font-bold tracking-tight sm:text-xl">
+            STEMS PLAYER
+          </h1>
         </header>
 
         <nav
