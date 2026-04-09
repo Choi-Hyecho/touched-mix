@@ -252,7 +252,7 @@ export default function App() {
         }}
       >
         <header className="mb-4 flex flex-col items-center gap-1 text-center">
-          <p className="font-display text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-ym-muted">
+          <p className="font-display text-lg font-semibold uppercase tracking-[0.35em] text-ym-muted">
             RE-TOUCHED : STEMS PLAYER
           </p>
         </header>
