@@ -22,6 +22,13 @@ export const CONTACT_ACCOUNT_DISPLAY = `${CONTACT_ACCOUNT_KO}${CONTACT_ACCOUNT_E
 /** 개발 중 매번 온보딩을 보고 싶을 때만 `true` */
 export const FORCE_ONBOARDING_EVERY_LOAD = false;
 
+/** TOUCHED 공식 SNS */
+export const ARTIST_YOUTUBE_URL =
+  "https://www.youtube.com/channel/UC1VarYVKLPA6DL8rLclYxBg";
+export const ARTIST_INSTAGRAM_URL =
+  "https://www.instagram.com/touched_official/";
+export const ARTIST_X_URL = "https://twitter.com/band_touched";
+
 /**
  * Fan-made · 저작권 안내 — `emphasis`만 Montserrat 적용
  * (온보딩·푸터는 FanMadeLegalNotice 컴포넌트 사용)
