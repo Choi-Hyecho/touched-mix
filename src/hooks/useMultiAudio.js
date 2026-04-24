@@ -507,9 +507,9 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
 
       const onVideoError = () => {
         if (gen !== preloadGenRef.current) return;
-        // 이미 미디어 준비 완료 후 play() 실패 등 재생 중 에러는 무시 (오디오는 계속 재생)
-        if (mediaReadyRef.current) return;
-        setLoadError("비디오를 불러오지 못했습니다.");
+        const code = video.error?.code ?? "?";
+        const msg = video.error?.message ?? "";
+        setLoadError(`비디오 오류 (code: ${code}${msg ? " / " + msg : ""})`);
       };
 
       video.addEventListener("progress", onVideoProgress);

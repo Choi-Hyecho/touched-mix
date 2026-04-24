@@ -1,10 +1,21 @@
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CONTACT_INSTAGRAM_URL,
   CONTACT_X_URL,
 } from "../constants/onboarding.js";
 
-function ErrorScreen() {
+function ErrorScreen({ errorMessage }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    const text = `[touched-mixer 오류]\n${errorMessage ?? "알 수 없는 오류"}\nUA: ${navigator.userAgent}`;
+    navigator.clipboard?.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   return (
     <motion.div
       key="error-screen"
@@ -16,10 +27,24 @@ function ErrorScreen() {
     >
       <p className="mb-3 text-4xl">🛠️</p>
       <p className="mb-1 text-lg font-bold text-white">서버가 잠시 아파요</p>
-      <p className="mb-6 text-sm leading-relaxed text-white/55">
+      <p className="mb-4 text-sm leading-relaxed text-white/55">
         일시적인 오류가 발생했어요.<br />
         잠시 후 새로고침 해주세요.
       </p>
+      {errorMessage && (
+        <div className="mb-6 w-full max-w-xs rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3">
+          <p className="mb-2 text-left font-mono text-[0.65rem] leading-relaxed text-white/40 break-all">
+            {errorMessage}
+          </p>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="text-xs text-white/40 underline underline-offset-2 transition hover:text-white/70"
+          >
+            {copied ? "복사됨 ✓" : "오류 코드 복사"}
+          </button>
+        </div>
+      )}
       <div className="mb-8 flex gap-3">
         <a
           href={CONTACT_X_URL}
@@ -52,11 +77,11 @@ function ErrorScreen() {
 /**
  * 미니멀 다크 모드 스켈레톤 — 좌→우 쉬머, 하단 재생 컨트롤 실루엣(블러)
  */
-export function VideoSkeletonScreen({ open, error = false, progress = 0, status = "" }) {
+export function VideoSkeletonScreen({ open, error = false, errorMessage = null, progress = 0, status = "" }) {
   return (
     <AnimatePresence>
       {error ? (
-        <ErrorScreen key="error-screen" />
+        <ErrorScreen key="error-screen" errorMessage={errorMessage} />
       ) : open ? (
         <motion.div
           key="video-skeleton"

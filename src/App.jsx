@@ -227,6 +227,7 @@ export default function App() {
       <VideoSkeletonScreen
         open={showLoading}
         error={!!loadError}
+        errorMessage={loadError}
         progress={loadProgress}
         status={loadStatus}
       />
