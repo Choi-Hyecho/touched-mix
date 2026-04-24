@@ -197,6 +197,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
   const startingRef = useRef(false);
   const startedRef = useRef(false);
   const preloadGenRef = useRef(0);
+  const mediaReadyRef = useRef(false);
   const videoReadyRef = useRef(false);
   const audioReadyIdsRef = useRef(new Set());
   const tracksRef = useRef(tracks);
@@ -363,6 +364,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       if (vOk && aOk) {
         setLoadProgress(100);
         setLoadStatus("준비 완료");
+        mediaReadyRef.current = true;
         setMediaReady(true);
       }
     }, PRELOAD_SETTLE_MS);
@@ -376,6 +378,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
     }
     videoReadyRef.current = false;
     audioReadyIdsRef.current = new Set();
+    mediaReadyRef.current = false;
     setMediaReady(false);
     setLoadProgress(0);
     setLoadError(null);
@@ -504,6 +507,8 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
 
       const onVideoError = () => {
         if (gen !== preloadGenRef.current) return;
+        // 이미 미디어 준비 완료 후 play() 실패 등 재생 중 에러는 무시 (오디오는 계속 재생)
+        if (mediaReadyRef.current) return;
         setLoadError("비디오를 불러오지 못했습니다.");
       };
 
@@ -795,6 +800,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
     mutedRef.current.clear();
     setStarted(false);
     setMutedTracks({});
+    mediaReadyRef.current = false;
     setMediaReady(false);
     setLoadProgress(0);
     setLoadError(null);
