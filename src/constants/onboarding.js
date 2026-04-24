@@ -22,6 +22,9 @@ export const CONTACT_ACCOUNT_DISPLAY = `${CONTACT_ACCOUNT_KO}${CONTACT_ACCOUNT_E
 /** 개발 중 매번 온보딩을 보고 싶을 때만 `true` */
 export const FORCE_ONBOARDING_EVERY_LOAD = false;
 
+/** TOUCHED 공식 채널 · 홈 */
+export const ARTIST_BSTAGE_URL = "https://touched.bstage.in";
+
 /** TOUCHED 공식 SNS */
 export const ARTIST_YOUTUBE_URL =
   "https://www.youtube.com/channel/UC1VarYVKLPA6DL8rLclYxBg";

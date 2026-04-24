@@ -10,6 +10,7 @@ import {
   CONTACT_ACCOUNT_KO,
   CONTACT_INSTAGRAM_URL,
   CONTACT_X_URL,
+  ARTIST_BSTAGE_URL,
   ARTIST_YOUTUBE_URL,
   ARTIST_INSTAGRAM_URL,
   ARTIST_X_URL,
@@ -363,10 +364,21 @@ export default function App() {
           </p>
 
           <div className="mt-1 flex flex-col items-center gap-1">
-            <p className="font-display text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-ym-muted/50">
-              Follow
+            <p className="font-sans text-[0.6rem] text-ym-muted/50 [word-break:keep-all]">
+              아티스트에 대해 더 알고 싶다면
             </p>
             <div className="flex flex-col items-center gap-0.5">
+              <a
+                href={(() => { const d = new Date(); return `${ARTIST_BSTAGE_URL}/schedule/${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}`; })()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 font-display text-[0.62rem] text-ym-muted/60 transition hover:text-brand-light/90"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
+                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                </svg>
+                Bstage
+              </a>
               <a
                 href={ARTIST_YOUTUBE_URL}
                 target="_blank"

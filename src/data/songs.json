@@ -1,4 +1,15 @@
-[
+[{
+    "id": "day",
+    "title": "drip_DA🏝️",
+    "name": "drip_DA / 데이브레이크",
+    "videoUrl": "/videos/day.webm",
+    "thumbnailUrl": "/images/thumb_challenge_02.jpg",
+    "tracks": [
+      { "id": "vocal1", "label": "보컬", "urls": ["/audio/day/vocal.m4a"] },
+      { "id": "bass", "label": "베이스", "urls": ["/audio/day/bass.m4a"] },
+      { "id": "inst", "label": "효과", "urls": ["/audio/day/inst.m4a"] }
+    ]
+  },
    {
     "id": "mam",
     "title": "아 마음대로 다 된다❗",
@@ -16,7 +27,7 @@
   },
     {
     "id": "life",
-    "title": "LIFE❕",
+    "title": "LIFE💜",
     "name": "LIFE! / 자우림",
     "videoUrl": "/videos/life.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
