@@ -2,7 +2,7 @@
     "id": "day",
     "title": "drip_DA🏝️",
     "name": "drip_DA / 데이브레이크",
-    "videoUrl": "/videos/day.webm",
+    "videoUrl": "/videos/day.webm?v=2",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
       { "id": "vocal1", "label": "보컬", "urls": ["/audio/day/vocal.m4a"] },
