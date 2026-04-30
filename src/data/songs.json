@@ -1,4 +1,17 @@
 [{
+    "id": "bom",
+    "title": "초봄🌸",
+    "name": "초봄 / 최유리",
+    "videoUrl": "/videos/bom.webm",
+    "thumbnailUrl": "/images/thumb_challenge_02.jpg",
+    "tracks": [
+      { "id": "vocal1", "label": "보컬", "urls": ["/audio/bom/vocal.m4a"] },
+      { "id": "guitar", "label": "기타", "urls": ["/audio/bom/guitar.m4a"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/bom/piano.m4a"] },
+      { "id": "string", "label": "스트링", "urls": ["/audio/bom/string.m4a"] }
+    ]
+  },
+  {
     "id": "day",
     "title": "drip_DA🏝️",
     "name": "drip_DA / 데이브레이크",
@@ -7,7 +20,7 @@
     "tracks": [
       { "id": "vocal1", "label": "보컬", "urls": ["/audio/day/vocal.m4a"] },
       { "id": "bass", "label": "베이스", "urls": ["/audio/day/bass.m4a"] },
-      { "id": "inst", "label": "효과", "urls": ["/audio/day/inst.m4a"] }
+      { "id": "inst", "label": "인스트", "urls": ["/audio/day/inst.m4a"] }
     ]
   },
    {

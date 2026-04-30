@@ -34,6 +34,7 @@ function TrackIcon({ track }) {
   const isBass = id === "bass" || label.includes("베이스");
   const isDrum = id === "drum" || label.includes("드럼");
   const isPiano = id === "piano" || label.includes("피아노");
+  const isString = id === "string" || label.includes("스트링");
 
   let Icon = Music;
   if (isVocal) Icon = Mic;
@@ -48,10 +49,14 @@ function TrackIcon({ track }) {
     <span className="relative inline-flex items-center justify-center">
       <Icon size={20} color="currentColor" />
 
-      {/* 베이스는 기타 아이콘에 작은 텍스트 라벨로 구분 */}
+      {/* 베이스/스트링은 아이콘에 작은 텍스트 라벨로 구분 */}
       {isBass ? (
         <span className="absolute -right-[0.05rem] -bottom-[0.45rem] rounded-[0.35rem] bg-white/10 px-1 py-[0.05rem] text-[0.52rem] font-bold leading-none text-white/90">
           bass
+        </span>
+      ) : isString ? (
+        <span className="absolute -right-[0.05rem] -bottom-[0.45rem] rounded-[0.35rem] bg-white/10 px-[0.2rem] py-[0.05rem] text-[0.44rem] font-bold leading-none text-white/90">
+          STR
         </span>
       ) : null}
 

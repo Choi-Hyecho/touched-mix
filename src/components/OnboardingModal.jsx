@@ -70,6 +70,9 @@ export function OnboardingModal() {
                 </span>
               </p>
               <FanMadeLegalNotice className="text-[0.8125rem] leading-relaxed text-white/65" />
+              <p className="rounded-xl border border-brand/30 bg-brand/10 px-3 py-2 text-[0.8125rem] text-white/75">
+                🌸 새 곡이 추가됐어요 — <span className="font-semibold text-white/90">초봄 / 최유리</span> <span className="text-white/45">(2026.04.30)</span>
+              </p>
               <p className="text-white/55">
                 문의·제보: {CONTACT_ACCOUNT_KO}
                 <span className="font-display not-italic">{CONTACT_ACCOUNT_EN}</span>{" "}
