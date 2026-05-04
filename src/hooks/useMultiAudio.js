@@ -17,12 +17,13 @@ const DEFAULT_TRACK_VOLUME = 0.8;
 /** 트랙별 순차 로딩 중 표시할 이스터에그 문구 (track.id → 문구) */
 const TRACK_LOAD_MESSAGES = {
   vocal1: "윤민이 마이크에 츠츠츠 중…🎤",
-  vocal2: "오빠들 코러스 쌓는 중… 🎵",
-  inst:   "셋 리스트 부착 중…📃",
-  piano:  "도현이 키보드 세팅 중… 🎹",
+  vocal2: "오빠들 코러스 쌓는 중…🎵",
+  inst:   "세트 리스트 부착 중…📃",
+  piano:  "도현이 키보드 세팅 중…🎹",
+  string: "승빈이 마이크 위치 조정 중…🎙️",
   guitar: "윤민이가 마이크 스탠드에 피크 끼우는 중…🎤",
   bass:   "비킴이 피크 찾는 중…🫶",
-  drum:   "승빈이 스네어 튜닝 중… 🥁",
+  drum:   "승빈이 스네어 튜닝 중…🥁",
 };
 
 /** Web Audio 디코딩·네트워크 여유 — LTE 등 느린 망에서 순차 로딩 시 충분히 기다림 */
@@ -219,6 +220,11 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
   const mediaReadySettleTimerRef = useRef(0);
   /** waiting 이벤트가 실제로 발생했을 때만 playing에서 재싱크 — 일반 재생 시 이중 트리거 방지 */
   const isBufferingRef = useRef(false);
+  /**
+   * howl.seek() 읽기가 이 환경에서 마지막 seek 위치를 그대로 반환하는 버그를 우회.
+   * wall-clock 기반으로 예상 재생 위치를 추적해 drift 감지에 사용한다.
+   */
+  const stemClockRef = useRef({ startMs: 0, startPos: 0, running: false });
 
   const clearSyncInterval = useCallback(() => {
     if (syncIntervalRef.current) {
@@ -288,6 +294,9 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
         /* noop */
       }
     });
+    stemClockRef.current = { startMs: Date.now(), startPos: t, running: resume };
+    // seeked에서 이미 resume 처리했으면 onPlaying의 이중 play 방지
+    if (resume) isBufferingRef.current = false;
   }, [videoRef]);
 
   const runPeriodicDriftCorrection = useCallback(() => {
@@ -295,19 +304,26 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
     if (!video || video.paused) return;
     const t = video.currentTime;
     const targetSync = getSyncTargetTime(video, WEB_AUDIO_SYNC_LEAD_SEC);
+
+    // howl.seek() 읽기가 last-set 값을 반환하는 환경 버그 우회: wall-clock 추정치로 drift 감지
+    const sc = stemClockRef.current;
+    const stemPos = sc.running
+      ? sc.startPos + (Date.now() - sc.startMs) / 1000
+      : sc.startPos;
+    const drift = Math.abs(stemPos - t);
+    if (drift < SYNC_DRIFT_SEC) return;
+
+    const now = Date.now();
+    const firstHowl = howlsRef.current.values().next().value;
+    const last = firstHowl ? (lastSeekAtRef.current.get(firstHowl) ?? 0) : 0;
+    // 큰 어긋남(시크 직후 등)은 스로틀 없이 바로 맞춤
+    if (drift < 1 && now - last < SYNC_SEEK_THROTTLE_MS) return;
+
     howlsRef.current.forEach((howl) => {
-      const pos = howl.seek();
-      const drift = Math.abs(pos - t);
-      if (drift < SYNC_DRIFT_SEC) return;
-
-      const now = Date.now();
-      const last = lastSeekAtRef.current.get(howl) ?? 0;
-      // 큰 어긋남(시크 직후 등)은 스로틀 없이 바로 맞춤
-      if (drift < 1 && now - last < SYNC_SEEK_THROTTLE_MS) return;
       lastSeekAtRef.current.set(howl, now);
-
       seekHowlSeconds(howl, targetSync, "periodic");
     });
+    stemClockRef.current = { startMs: now, startPos: targetSync, running: true };
   }, [videoRef]);
 
   const recalcLoadProgress = useCallback(() => {
@@ -396,6 +412,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
     isSeekingRef.current = false;
     lastPlayStaggerWallMsRef.current = 0;
     lastTimeupdateHardSyncAtRef.current = 0;
+    stemClockRef.current = { startMs: 0, startPos: 0, running: false };
 
     const list = tracksRef.current;
 
@@ -888,6 +905,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
             /* noop */
           }
         });
+        stemClockRef.current = { startMs: Date.now(), startPos: t, running: true };
       };
 
       const v0 = videoRef?.current;
@@ -925,6 +943,14 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       setIsPlaying(false);
       clearSyncInterval();
       howlsRef.current.forEach((howl) => howl.pause());
+      const scPause = stemClockRef.current;
+      stemClockRef.current = {
+        startMs: Date.now(),
+        startPos: scPause.running
+          ? scPause.startPos + (Date.now() - scPause.startMs) / 1000
+          : scPause.startPos,
+        running: false,
+      };
     };
 
     /** LTE 등 버퍼링 시작: 비디오 멈추는 동안 오디오도 같이 멈춤 */
@@ -934,6 +960,14 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       howlsRef.current.forEach((howl) => {
         try { howl.pause(); } catch { /* noop */ }
       });
+      const scWait = stemClockRef.current;
+      stemClockRef.current = {
+        startMs: Date.now(),
+        startPos: scWait.running
+          ? scWait.startPos + (Date.now() - scWait.startMs) / 1000
+          : scWait.startPos,
+        running: false,
+      };
       logAudioSync("video-waiting (buffering) → audio paused", {
         videoT: video.currentTime,
       });
@@ -953,6 +987,7 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
           howl.play();
         } catch { /* noop */ }
       });
+      stemClockRef.current = { startMs: Date.now(), startPos: t, running: true };
       skipTimeDriftSyncUntilRef.current = Date.now() + 300;
       clearSyncInterval();
       syncIntervalRef.current = window.setInterval(runPeriodicDriftCorrection, SYNC_INTERVAL_MS);
@@ -1030,15 +1065,16 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       }
 
       const vt = video.currentTime;
-      let needSync = false;
-      howlsRef.current.forEach((howl) => {
-        const pos = howl.seek();
-        if (Math.abs(pos - vt) > TIMEUPDATE_DRIFT_SYNC_SEC) needSync = true;
-      });
-      if (!needSync) return;
+      // howl.seek() 읽기 버그 우회: stem clock으로 drift 감지
+      const scTu = stemClockRef.current;
+      const stemPosTu = scTu.running
+        ? scTu.startPos + (Date.now() - scTu.startMs) / 1000
+        : scTu.startPos;
+      if (Math.abs(stemPosTu - vt) <= TIMEUPDATE_DRIFT_SYNC_SEC) return;
 
       logAudioSync("timeupdate drift → hardSync+lead", {
         vt,
+        stemEstimate: stemPosTu,
         targetWithLead: getSyncTargetTime(video, WEB_AUDIO_SYNC_LEAD_SEC),
         leadSec: WEB_AUDIO_SYNC_LEAD_SEC,
         howlPosSample: getFirstHowlReportedPos(howlsRef.current),
@@ -1047,6 +1083,8 @@ export function useMultiAudio({ songId, tracks = [], videoRef }) {
       });
       timeUpdateDriftAtRef.current = now;
       lastTimeupdateHardSyncAtRef.current = now;
+      const syncTarget = getSyncTargetTime(video, WEB_AUDIO_SYNC_LEAD_SEC);
+      stemClockRef.current = { startMs: Date.now(), startPos: syncTarget, running: true };
       hardSyncSlavesToMaster({ leadSec: WEB_AUDIO_SYNC_LEAD_SEC });
     };
 
