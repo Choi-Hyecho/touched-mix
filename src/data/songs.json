@@ -6,12 +6,12 @@
     "videoUrl": "/videos/chap.webm",
     "thumbnailUrl": "/images/thumb_challenge_02.jpg",
     "tracks": [
-      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/chap/2_main.m4a"] },
-      { "id": "vocal2", "label": "보컬2", "urls": ["/audio/chap/3_sub.m4a"] },
-      { "id": "piano", "label": "피아노", "urls": ["/audio/chap/2_piano.m4a"] },
-      { "id": "guitar", "label": "기타", "urls": ["/audio/chap/2_guitar.m4a"] },
-      { "id": "string", "label": "베이스", "urls": ["/audio/chap/2_bass.m4a"] },
-      { "id": "drum", "label": "드럼", "urls": ["/audio/chap/2_drums.m4a"] }
+      { "id": "vocal1", "label": "메인보컬", "urls": ["/audio/chap/2_main.m4a?v=1"] },
+      { "id": "vocal2", "label": "보컬2", "urls": ["/audio/chap/3_sub.m4a?v=1"] },
+      { "id": "piano", "label": "피아노", "urls": ["/audio/chap/2_piano.m4a?v=1"] },
+      { "id": "guitar", "label": "기타", "urls": ["/audio/chap/2_guitar.m4a?v=1"] },
+      { "id": "string", "label": "베이스", "urls": ["/audio/chap/2_bass.m4a?v=1"] },
+      { "id": "drum", "label": "드럼", "urls": ["/audio/chap/2_drums.m4a?v=1"] }
     ]
   },
   {
