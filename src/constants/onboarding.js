@@ -8,7 +8,7 @@ export const ONBOARDING_STORAGE_VERSION = 3;
 export const ONBOARDING_STORAGE_KEY = `touched-mixer-onboarding-v${ONBOARDING_STORAGE_VERSION}-dismissed`;
 
 /** 문의·버그 제보용 SNS */
-export const CONTACT_X_URL = "https://x.com/RecOfTouching";
+export const CONTACT_X_URL = "https://x.com/RecOfTouched";
 export const CONTACT_INSTAGRAM_URL =
   "https://www.instagram.com/rec_of_touched/";
 
@@ -30,7 +30,7 @@ export const ARTIST_YOUTUBE_URL =
   "https://www.youtube.com/channel/UC1VarYVKLPA6DL8rLclYxBg";
 export const ARTIST_INSTAGRAM_URL =
   "https://www.instagram.com/touched_official/";
-export const ARTIST_X_URL = "https://twitter.com/band_touched";
+export const ARTIST_X_URL = "https://x.com/RecOfTouched";
 
 /**
  * Fan-made · 저작권 안내 — `emphasis`만 Montserrat 적용
